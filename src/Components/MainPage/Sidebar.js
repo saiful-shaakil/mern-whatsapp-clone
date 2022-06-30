@@ -8,18 +8,21 @@ import {
   faEllipsisVertical,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
+import SidebarChat from "./SidebarChat";
 const Sidebar = () => {
   const [user, loading, error] = useAuthState(auth);
   return (
-    <div className="flex flex-col flex-[0.35]">
-      <div className="flex justify-between p-[20px] border-2">
+    <div className="flex border-r-2 flex-col flex-[0.35]">
+      <div className="flex justify-between p-[20px]">
         <div className="flex items-center">
           <img
             src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWVufGVufDB8fDB8fA%3D%3D&w=1000&q=80"
             alt="profile"
             className="rounded-[50%] h-16 w-16"
           />
-          <h5 className="ml-[10px]">{user?.displayName || "Shakil"}</h5>
+          <h5 className="ml-[10px] font-semibold text-[20px]">
+            {user?.displayName || "Shakil"}
+          </h5>
         </div>
         <div className="flex items-center justify-between min-w-[10vw]">
           <FontAwesomeIcon
@@ -36,22 +39,24 @@ const Sidebar = () => {
           />
         </div>
       </div>
-      <div className="flex items-center bg-[#f6f6f6] h-[40px] p-[10px]">
-        <div className="flex items-center bg-white w-full h-[35px] rounded-md pl-[5px]">
-          {/* search outline icon color: gray;
-  padding: 10px; */}
+      <div className="flex items-center bg-[#f6f6f6] h-[40px] p-[10px] py-8">
+        <div className="flex items-center bg-white w-full h-[35px] rounded-[20px]">
           <FontAwesomeIcon
             className="p-[10px] text-gray-600"
             icon={faMagnifyingGlass}
           />
           <input
             type="text"
-            className="border-none w-[80%] ml-[10px] focus:outline-none"
+            className="border-none w-[80%] mx-[10px] focus:outline-none"
             placeholder="Search or start new chat"
           />
         </div>
       </div>
-      <div className="flex-[1] bg-white overflow-y-scroll">New Chat Room</div>
+      <div className="flex-[1] bg-white overflow-y-scroll">
+        <SidebarChat addNewChat />
+        <SidebarChat name="Shakil" id={"i9e"} />
+        <SidebarChat name="Dev Room" id={"i9e"} />
+      </div>
     </div>
   );
 };
