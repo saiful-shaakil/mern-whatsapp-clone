@@ -1,18 +1,27 @@
 import React from "react";
 import { useSignInWithGoogle } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
+import auth from "../firebase";
 
 const LogIn = () => {
+  const navigate = useNavigate();
+  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
+  if (user) {
+    navigate("/");
+  }
+
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center bg-[#dadbd3] h-[100vh]">
       <img
         className="w-[210px]"
         src="https://upload.wikimedia.org/wikipedia/commons/5/5e/WhatsApp_icon.png?20200503174721"
         alt=""
       />
       <button
+        onClick={() => signInWithGoogle()}
         aria-label="Login with Google"
         type="button"
-        className="flex items-center justify-center w-full p-4 space-x-4 border rounded-md focus:ring-2 focus:ring-offset-1 dark:border-gray-400 focus:ring-violet-400"
+        className="flex items-center justify-center p-4 space-x-4 border rounded-[30px] w-[200px] bg-green-500 "
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"

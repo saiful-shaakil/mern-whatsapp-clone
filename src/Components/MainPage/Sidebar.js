@@ -10,18 +10,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SidebarChat from "./SidebarChat";
 const Sidebar = () => {
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   return (
     <div className="flex border-r-2 flex-col flex-[0.35]">
       <div className="flex justify-between p-[20px]">
         <div className="flex items-center">
           <img
-            src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8bWVufGVufDB8fDB8fA%3D%3D&w=1000&q=80"
+            src={user.photoURL}
             alt="profile"
             className="rounded-[50%] h-16 w-16"
           />
           <h5 className="ml-[10px] font-semibold text-[20px]">
-            {user?.displayName || "Shakil"}
+            {user?.displayName}
           </h5>
         </div>
         <div className="flex items-center justify-between min-w-[10vw]">

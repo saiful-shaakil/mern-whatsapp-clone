@@ -19,6 +19,7 @@ const ChatContainer = () => {
   const [messages, setMessages] = useState([]);
   const sendMessage = (e) => {
     e.preventDefault();
+    setInput("");
   };
   return (
     <div className="flex-[0.65] flex flex-col">
