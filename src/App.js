@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import LogIn from "./Components/LogIn";
+import ChatContainer from "./Components/MainPage/ChatContainer";
 import Sidebar from "./Components/MainPage/Sidebar";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       ) : (
         <div className="flex bg-[#ededed] h-[90vh] w-[90vw]">
           <Sidebar />
+          <ChatContainer />
         </div>
       )}
     </div>
