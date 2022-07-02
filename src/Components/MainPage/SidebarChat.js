@@ -5,7 +5,6 @@ import auth from "../firebase";
 
 const SidebarChat = ({ addNewChat, contact }) => {
   const [user] = useAuthState(auth);
-  const [messages, setMessages] = useState([]);
   const [seed, setSeed] = useState("");
   useEffect(() => {
     setSeed(Math.floor(Math.random() * 6000000));
@@ -26,7 +25,7 @@ const SidebarChat = ({ addNewChat, contact }) => {
         body: JSON.stringify(newContact),
       })
         .then((res) => res.json())
-        .then((data) => console.log(data));
+        .then((data) => {});
     }
   };
 

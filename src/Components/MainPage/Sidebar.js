@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import Pusher from "pusher-js";
 import auth from "../firebase";
 import {
   faCircleDot,
@@ -13,10 +14,25 @@ const Sidebar = () => {
   const [contacts, setContacts] = useState([]);
   const [user, loading] = useAuthState(auth);
   useEffect(() => {
-    fetch(`http://localhost:5000/get-contacts`)
+    fetch(`http://localhost:5000/get-contacts/${user?.email}`)
       .then((res) => res.json())
       .then((data) => setContacts(data));
   }, []);
+  useEffect(() => {
+    const pusher = new Pusher("6187cf4f74e1a58bc91c", {
+      cluster: "mt1",
+    });
+
+    const channel = pusher.subscribe("contacts");
+    channel.bind("inserted", (newContact) => {
+      setContacts([...contacts, newContact]);
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, [contacts]);
   return (
     <div className="flex border-r-2 flex-col flex-[0.35]">
       <div className="flex justify-between p-[20px]">
