@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useParams } from "react-router";
 import auth from "../firebase";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Pusher from "pusher-js";
 import {
   faMagnifyingGlass,
   faPaperclip,
@@ -12,14 +13,49 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 const ChatContainer = () => {
   const [user, loading] = useAuthState(auth);
-  const { roomId } = useParams();
-
   const [input, setInput] = useState("");
   const [roomName, setRoomName] = useState("");
   const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:5000/get-messages")
+      .then((res) => res.json())
+      .then((data) => setMessages(data));
+  }, []);
+  useEffect(() => {
+    const pusher = new Pusher("6187cf4f74e1a58bc91c", {
+      cluster: "mt1",
+    });
+
+    const channel = pusher.subscribe("messages");
+    channel.bind("inserted", (newMessage) => {
+      setMessages([...messages, newMessage]);
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, [messages]);
   const sendMessage = (e) => {
     e.preventDefault();
-    setInput("");
+    const message = {
+      name: user.displayName,
+      message: input,
+      received: false,
+    };
+    fetch("http://localhost:5000/insert-messages", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(message),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setInput("");
+      });
   };
   return (
     <div className="flex-[0.65] flex flex-col">
@@ -31,12 +67,7 @@ const ChatContainer = () => {
         />
         <div className="flex-[1] pl-5">
           <h3 className="font-semibold">{roomName || "Shakil"}</h3>
-          <p className="text-gray-600">
-            Last seen at{" "}
-            {new Date(messages[messages.length - 1]?.timestamp?.toDate())
-              .toUTCString()
-              .slice(16, 29)}
-          </p>
+          <p className="text-gray-600">Last seen at </p>
         </div>
         <div className="flex justify-between min-w-[100px] pr-6">
           <FontAwesomeIcon className="text-[18px]" icon={faMagnifyingGlass} />
@@ -56,7 +87,7 @@ const ChatContainer = () => {
       >
         {messages.map((message) => (
           <p
-            key={message?.timestamp?.nanoseconds}
+            key={message._id}
             className={`relative text-[15px] p-[10px] rounded-[10px] w-fit bg-[#ffffff] mb-[30px] ${
               message?.name === user?.displayName && "ml-auto bg-[#dcf8c6]"
             }`}
@@ -66,7 +97,7 @@ const ChatContainer = () => {
             </span>
             {message?.message}
             <span className="font-extrabold text-xs ml-[10px] text-gray-600">
-              {new Date(message.timestamp?.toDate()).toUTCString()}
+              {message.createdAt}
             </span>
           </p>
         ))}
@@ -77,10 +108,11 @@ const ChatContainer = () => {
           <input
             onChange={(e) => setInput(e.target.value)}
             type="text"
+            value={input}
             className="flex-[1] rounded-[30px] p-[10px] border-none"
             placeholder="Type a message"
             name=""
-            id=""
+            id="input-message"
           />
           <button className="hidden" type="submit" onClick={sendMessage}>
             Send a message

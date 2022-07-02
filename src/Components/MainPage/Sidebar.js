@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../firebase";
 import {
@@ -10,13 +10,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import SidebarChat from "./SidebarChat";
 const Sidebar = () => {
+  const [contacts, setContacts] = useState([]);
   const [user, loading] = useAuthState(auth);
+  useEffect(() => {
+    fetch(`http://localhost:5000/get-contacts`)
+      .then((res) => res.json())
+      .then((data) => setContacts(data));
+  }, []);
   return (
     <div className="flex border-r-2 flex-col flex-[0.35]">
       <div className="flex justify-between p-[20px]">
         <div className="flex items-center">
           <img
-            src={user.photoURL}
+            src={user?.photoURL}
             alt="profile"
             className="rounded-[50%] h-16 w-16"
           />
@@ -54,8 +60,9 @@ const Sidebar = () => {
       </div>
       <div className="flex-[1] bg-white overflow-y-scroll">
         <SidebarChat addNewChat />
-        <SidebarChat name="Shakil" id={"i9e"} />
-        <SidebarChat name="Dev Room" id={"i9e"} />
+        {contacts.map((contact) => (
+          <SidebarChat key={contact._id} contact={contact} />
+        ))}
       </div>
     </div>
   );
