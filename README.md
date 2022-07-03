@@ -1,8 +1,17 @@
-# Getting Started with Create React App
+## About This Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[Cick here to open live link](https://mern-whatsapp-clone-2acd3.web.app)
 
-## Available Scripts
+It's a clone of some functionality of whatsapp where a user must have to login first. S/he will be able to send message in groups/rooom or the contact s/he'll make. One user won't be able to see another user's contact list. The website has two common rooms (Developers Room & Users Room) for every user.
+
+## Technology Used in this clone
+
+- React JS
+- Node JS
+- Express
+- Mongoose (From MongoDB)
+- Tailwind (CSS)
+- Pusher (to make chat realtime)
 
 In the project directory, you can run:
 
