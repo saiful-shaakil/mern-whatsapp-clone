@@ -11,13 +11,15 @@ const SidebarChat = ({ addNewChat, contact }) => {
   }, []);
   const createChat = () => {
     const contact = prompt("Please enter a name for chat");
+    const timestamp = new Date().toLocaleTimeString();
     if (contact) {
       const newContact = {
         name: contact,
         by: user.email,
+        timestamp: timestamp,
         img: `https://avatars.dicebear.com/api/open-peeps/${seed}.svg`,
       };
-      fetch("http://localhost:5000/insert-contact", {
+      fetch("https://cryptic-eyrie-74234.herokuapp.com/insert-contact", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -49,7 +51,7 @@ const SidebarChat = ({ addNewChat, contact }) => {
       className="flex items-center p-[20px] cursor-pointer border-b-2 hover:bg-[#ebebeb]"
     >
       <div className="ml-[15px]">
-        <h3 className="m-0 font-semibold">Add New Chat</h3>
+        <h3 className="m-0 font-semibold font-serif">Add New Chat</h3>
       </div>
     </div>
   );

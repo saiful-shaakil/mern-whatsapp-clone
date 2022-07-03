@@ -4,13 +4,14 @@ import { Route, Routes } from "react-router-dom";
 import MainPage from "./Components/MainPage/MainPage";
 import RequireAuth from "./Components/RequireAuth";
 import LogIn from "./Components/MainPage/LogIn";
+import ChatContainer from "./Components/MainPage/ChatContainer";
 
 function App() {
   return (
     <div>
       <Routes>
         <Route
-          path="/"
+          path="*"
           element={
             <RequireAuth>
               <MainPage />

@@ -7,7 +7,7 @@ const LogIn = () => {
   const navigate = useNavigate();
   const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
   if (user) {
-    navigate("/");
+    navigate("/contacts/62c089525d1106410c7bba6e");
   }
 
   return (

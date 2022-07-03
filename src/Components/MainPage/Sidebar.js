@@ -12,11 +12,21 @@ import {
 import SidebarChat from "./SidebarChat";
 const Sidebar = () => {
   const [contacts, setContacts] = useState([]);
+  const [commonContacts, setCommonContacts] = useState([]);
   const [user, loading] = useAuthState(auth);
+  //useEffect for get all contacts for each email
   useEffect(() => {
-    fetch(`http://localhost:5000/get-contacts/${user?.email}`)
+    fetch(
+      `https://cryptic-eyrie-74234.herokuapp.com/get-contacts/${user?.email}`
+    )
       .then((res) => res.json())
       .then((data) => setContacts(data));
+  }, [user?.email]);
+  //useEffect for get common contacts for all user
+  useEffect(() => {
+    fetch("https://cryptic-eyrie-74234.herokuapp.com/common-contacts")
+      .then((res) => res.json())
+      .then((data) => setCommonContacts(data));
   }, []);
   useEffect(() => {
     const pusher = new Pusher("6187cf4f74e1a58bc91c", {
@@ -27,18 +37,16 @@ const Sidebar = () => {
     channel.bind("inserted", (newContact) => {
       setContacts([...contacts, newContact]);
     });
-
-    return () => {
-      channel.unbind_all();
-      channel.unsubscribe();
-    };
   }, [contacts]);
   return (
-    <div className="flex border-r-2 flex-col flex-[0.35]">
+    <div className="flex border-r-2 flex-col flex-[0.35] min-w-[250px]">
       <div className="flex justify-between p-[20px]">
         <div className="flex items-center">
           <img
-            src={user?.photoURL}
+            src={
+              user?.photoURL ||
+              "https://img.freepik.com/free-photo/british-shorthair-kitten-3-5-months-old-sitting-looking-up_191971-4591.jpg?w=2000"
+            }
             alt="profile"
             className="rounded-[50%] h-16 w-16"
           />
@@ -76,6 +84,9 @@ const Sidebar = () => {
       </div>
       <div className="flex-[1] bg-white overflow-y-scroll">
         <SidebarChat addNewChat />
+        {commonContacts.map((contact) => (
+          <SidebarChat key={contact._id} contact={contact} />
+        ))}
         {contacts.map((contact) => (
           <SidebarChat key={contact._id} contact={contact} />
         ))}
